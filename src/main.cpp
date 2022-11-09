@@ -11,7 +11,7 @@ int main()
     sf::Texture box_text;
     sf::Texture map_text;
     float target_x, target_y;
-    box_text.loadFromFile("./Resources/box.png");
+    box_text.loadFromFile("./Resources/box2.png");
     map_text.loadFromFile("./Resources/map.png");
     Enemy e;
     Path path;
@@ -28,6 +28,7 @@ int main()
     path.path.push(sf::Vector2f(950, 230));
     path.path.push(sf::Vector2f(950, 430));
     path.path.push(sf::Vector2f(350, 430));
+    e.sprite.setOrigin(16,16);
     window.setFramerateLimit(144);
 
     while (window.isOpen())
