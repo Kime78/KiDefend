@@ -1,7 +1,18 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-struct Enemy {
-    sf::Sprite sprite;
+#include <queue>
+
+enum class EnemyType {
+    Zombie, Alien, Monster
+};
+struct Enemy : public sf::Sprite {
     int health;
-    int tier;
+    EnemyType type;
+
+    Enemy();
+};
+
+struct Wave {
+    int wave_num;
+    std::queue<Enemy> enemies;
 };

@@ -1,8 +1,12 @@
 #pragma once
 #include <map>
 #include <SFML/Graphics.hpp>
+#include <utility>
 
-class Game {
-    std::map<sf::Image> images;
+struct Game {
+    sf::Texture sprite_matrix;
+    int health = 50;
+    int money = 1000;
+    void load_sprite(sf::Sprite& obj, std::pair<int, int> index);
     void render();
 };

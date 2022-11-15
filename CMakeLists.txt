@@ -6,8 +6,7 @@ FetchContent_Declare(SFML
     GIT_REPOSITORY https://github.com/SFML/SFML.git
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
-
-add_executable(KiDefend src/main.cpp src/core.cpp src/enemy.cpp src/path.cpp)
+add_executable(KiDefend src/main.cpp src/core.cpp src/enemy.cpp src/path.cpp src/utility.cpp src/turret.cpp src/level.cpp)
 target_link_libraries(KiDefend PRIVATE sfml-graphics)
 target_compile_features(KiDefend PRIVATE cxx_std_17)
 if (WIN32 AND BUILD_SHARED_LIBS)
