@@ -1,30 +1,41 @@
 #include "level.hpp"
 #include <fstream>
 
-void Level::load_level() {
-    std::ifstream fin("./Resources/LevelData" + std::to_string(level_num) + ".txt");
+void Level::load_level(int level_num) {
+    this->level_num = level_num;
+    std::string level_path = "./Resources/LevelData" + std::to_string(level_num) + ".txt";
+    std::ifstream fin(level_path);
     Wave wave;
-
-    int enemy_num;
-    fin >> wave.wave_num >> enemy_num;
-    for(int i = 0; i < enemy_num; i++) {
-        Enemy e;
-        int type;
-        fin >> type;
-        switch (type)
-        {
-        case 1:
-            e.type = EnemyType::Zombie;
-            break;
-        case 2:
-            e.type = EnemyType::Alien;
-            break;
-        case 3:
-            e.type = EnemyType::Monster;
-            break;
-        default:
-            break;
+    int enemy_num, waves_num;
+    fin >> waves_num;
+    for(int k = 0; k < waves_num; k++) {
+        fin >> wave.wave_num >> enemy_num;
+        for(int i = 0; i < enemy_num; i++) {
+            Enemy e;
+            int type;
+            fin >> type;
+            switch (type)
+            {
+            case 1:
+                e.type = EnemyType::Zombie;
+                break;
+            case 2:
+                e.type = EnemyType::Alien;
+                break;
+            case 3:
+                e.type = EnemyType::Monster;
+                break;
+            default:
+                break;
+            }
+            wave.enemies.push(e);
         }
-        wave.enemies.push(e);
-    }    
+        waves.push(wave);
+    }
+
+    int point_x, point_y;
+
+    while(fin >> point_x >> point_y) {
+        path.path.push(sf::Vector2f(point_x, point_y));
+    }
 }

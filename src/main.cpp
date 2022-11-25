@@ -5,6 +5,8 @@
 #include "enemy.hpp"
 #include "utility.hpp"
 #include "turret.hpp"
+#include "level.hpp"
+#include "core.hpp"
 
 #include <iostream>
 #include <cmath>
@@ -16,6 +18,7 @@ int main()
     sf::Texture map_text;
     sf::Texture turret_text;
     sf::CircleShape rad;
+   // Game joc(100, 100, "test");
     Turret test;
     test.setScale(2, 2);
     test.radious = 200;
@@ -34,7 +37,7 @@ int main()
     map.setTexture(map_text);
     test.setTexture(turret_text);
     e.setTexture(box_text);
-    //e.sprite = box;
+    //e.sprite = box;*
     e.setPosition(0,80);
     path.path.push(sf::Vector2f(1100, 80));
     path.path.push(sf::Vector2f(1100, 600));
@@ -51,6 +54,14 @@ int main()
 
     while (window.isOpen())
     {
+        //joc.run();
+        sf::Mouse mouse;
+        if(mouse.isButtonPressed(mouse.Left)) {
+            if(circullar_collide(test, sf::Vector2f(mouse.getPosition(window)), 32)) {
+                test.setPosition(mouse.getPosition(window).x, mouse.getPosition(window).y);
+                rad.setPosition(mouse.getPosition(window).x, mouse.getPosition(window).y);
+            }
+        }
         for (auto event = sf::Event{}; window.pollEvent(event);)
         {
             if (event.type == sf::Event::Closed)
@@ -60,14 +71,10 @@ int main()
         }
         window.clear();
         window.draw(map);
-        //test.rotate(angle_between(test.getPosition(), e.sprite.getPosition()) * (180 / M_PI));
-        if(e.getPosition().x > test.getPosition().x - test.radious && e.getPosition().x < test.getPosition().x + test.radious) {
-            if(e.getPosition().y > test.getPosition().y - test.radious && e.getPosition().y < test.getPosition().y + test.radious) { // to be reduced in a func {
+        if(circullar_collide(e, test.getPosition(), test.radious)) { 
                 test.setRotation(angle_between(test.getPosition(), e.getPosition()) * (180 / M_PI));
-           }
         }
         path.move_in_path(e, 1);
-        //std::cout << angle_between(test.getPosition(), e.getPosition()) * (180 / M_PI) << '\n';
         if(e.getPosition().x > 349 && e.getPosition().x < 351 && e.getPosition().y > 429 && e.getPosition().y < 431) {
             e = Enemy();
         }

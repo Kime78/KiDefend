@@ -8,5 +8,5 @@ struct Level
     sf::Sprite level_sprite; //or maybe a matrix of sprites to make it tile BASED
     std::queue<Wave> waves;
 
-    void load_level();
+    void load_level(int level_num);
 };
