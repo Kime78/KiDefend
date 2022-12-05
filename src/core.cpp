@@ -61,18 +61,18 @@ void Game::run() {
     for (auto event = sf::Event{}; window->pollEvent(event);)
     {
         if(event.type == sf::Event::MouseButtonPressed) {
-            if (event.mouseButton.button == sf::Mouse::Right) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
                 auto poz = sf::Mouse::getPosition(*window);
-                if(circullar_collide((sf::Vector2f)poz, sf::Vector2f(1100, 100), 100)) {
+                if(rectular_collide((sf::Vector2f)poz, sf::Vector2f(1045, 90), sf::Vector2f(217, 77))) {
                 //std::cout << "\n SPAWN at " << poz.x << " " << poz.y << "\n\n";
-                turrets.push_back(spawn_turret(TurretType::Gun, (sf::Vector2f)poz));
-                dragging = 1;
+                    turrets.push_back(spawn_turret(TurretType::Gun, (sf::Vector2f)poz));
+                    dragging = 1;
                 }
                 
             }  
         }
         if(event.type == sf::Event::MouseButtonReleased) {
-            if (event.mouseButton.button == sf::Mouse::Right) {
+            if (event.mouseButton.button == sf::Mouse::Left) {
                 dragging = 0;
             }  
         }
@@ -85,23 +85,29 @@ void Game::run() {
 
     if(dragging) {
         auto poz = sf::Mouse::getPosition(*window);
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-            turrets.front()->setPosition((sf::Vector2f)poz);
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+            if(turrets.back() != nullptr) {
+                turrets.back()->setPosition((sf::Vector2f)poz);
+            }
         }
     }
     
-    
+    sf::RectangleShape rect;
+    rect.setSize(sf::Vector2f(217, 77));
+    rect.setFillColor(sf::Color::Red);
+    rect.setPosition(1045, 90);
     
     window->clear();
     window->draw(map_sprite);
     window->draw(shop_sprite);
+    window->draw(rect);
     for(auto turret : turrets) {
         window->draw(*turret);
     }
     for(auto enemy : enemies) {
         current_level.path.move_in_path(*enemy);
         window->draw(*enemy);
-        if(circullar_collide((*enemy).getPosition(), current_level.path.path.back(), 30)) {
+        if(rectular_collide((*enemy).getPosition(), current_level.path.path.back(), sf::Vector2f(30, 30))) {
             kill_enemy(enemy);
             break;
         }

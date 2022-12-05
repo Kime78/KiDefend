@@ -59,7 +59,7 @@ int main()
         //joc.run();
         // sf::Mouse mouse;
         // if(mouse.isButtonPressed(mouse.Left)) {
-        //     if(circullar_collide(test, sf::Vector2f(mouse.getPosition(window)), 32)) {
+        //     if(rectular_collide(test, sf::Vector2f(mouse.getPosition(window)), 32)) {
         //         test.setPosition(mouse.getPosition(window).x, mouse.getPosition(window).y);
         //         rad.setPosition(mouse.getPosition(window).x, mouse.getPosition(window).y);
         //     }
@@ -73,7 +73,7 @@ int main()
         // }
         // window.clear();
         // window.draw(map);
-        // if(circullar_collide(e, test.getPosition(), test.radious)) { 
+        // if(rectular_collide(e, test.getPosition(), test.radious)) { 
         //         test.setRotation(angle_between(test.getPosition(), e.getPosition()) * (180 / M_PI));
         // }
         // path.move_in_path(e);
