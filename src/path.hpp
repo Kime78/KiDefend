@@ -4,7 +4,7 @@
 #include "enemy.hpp"
 
 struct Path {
-    std::queue<sf::Vector2f> path;
+    std::vector<sf::Vector2f> path;
 
-    void move_in_path(Enemy& obj, float speed);
+    void move_in_path(Enemy& obj);
 };

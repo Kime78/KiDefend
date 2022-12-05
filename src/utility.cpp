@@ -9,9 +9,9 @@ float angle_between(const sf::Vector2f& a, const sf::Vector2f& b) {
     return atan2(dy, dx);
 }
 
-bool circullar_collide(const sf::Sprite& obj, const sf::Vector2f& point, const float radious) {
-    if(obj.getPosition().x > point.x - radious && obj.getPosition().x < point.x + radious) {
-            if(obj.getPosition().y > point.y - radious && obj.getPosition().y < point.y + radious) { // to be reduced in a func {
+bool circullar_collide(const sf::Vector2f& obj_pos, const sf::Vector2f& point, const float radious) {
+    if(obj_pos.x > point.x - radious && obj_pos.x < point.x + radious) {
+            if(obj_pos.y > point.y - radious && obj_pos.y < point.y + radious) { // to be reduced in a func {
                 return true;
            }
         }

@@ -2,14 +2,14 @@
 #include "utility.hpp"
 #include <cmath>
 
-void Path::move_in_path(Enemy& obj, float speed) {
-    float angle = angle_between(path.front(), obj.getPosition());
+void Path::move_in_path(Enemy& obj) {
+    float angle = angle_between(path[obj.path_indx], obj.getPosition());
 
-    float vx = speed * cos(angle);
-    float vy = speed * sin(angle);
+    float vx = obj.speed * cos(angle);
+    float vy = obj.speed * sin(angle);
 
-    bool cond1 = obj.getPosition().x > path.front().x - 1 && obj.getPosition().x < path.front().x + 1;
-    bool cond2 = obj.getPosition().y > path.front().y - 1 && obj.getPosition().y < path.front().y + 1;
+    bool cond1 = obj.getPosition().x > path[obj.path_indx].x - 1 && obj.getPosition().x < path[obj.path_indx].x + 1;
+    bool cond2 = obj.getPosition().y > path[obj.path_indx].y - 1 && obj.getPosition().y < path[obj.path_indx].y + 1;
     if(cond1) {
         vx = 0;
     }
@@ -17,8 +17,8 @@ void Path::move_in_path(Enemy& obj, float speed) {
         vy = 0;
     }
     if(cond1 && cond2) {
-        path.pop();
-        float angle = angle_between(path.front(), obj.getPosition());
+        obj.path_indx++;
+        float angle = angle_between(path[obj.path_indx], obj.getPosition());
         obj.setRotation(0);
         obj.rotate(angle * (180.0/M_PI));
     }

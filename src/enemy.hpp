@@ -5,11 +5,14 @@
 enum class EnemyType {
     Zombie, Alien, Monster
 };
+
 struct Enemy : public sf::Sprite {
     int health;
+    float speed;
     EnemyType type;
-
+    int path_indx;
     Enemy();
+    Enemy(EnemyType type);
 };
 
 struct Wave {
