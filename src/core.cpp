@@ -103,7 +103,7 @@ void Game::run() {
     window->draw(rect);
     for(auto turret : turrets) {
         Enemy* enemy_short;
-        float min_dist = 9999999;
+        float min_dist = 1e307;
         for(auto enemy : enemies) {
             if(rectular_collide(turret->getPosition(), enemy->getPosition(), sf::Vector2f(turret->radious, turret->radious))) {
                 auto dist = distance(turret->getPosition(), enemy->getPosition());
@@ -113,7 +113,7 @@ void Game::run() {
                 }
             }
         }
-        if(!enemies.empty()) {
+        if(enemy_short != nullptr) {
             if(rectular_collide(turret->getPosition(), enemy_short->getPosition(), sf::Vector2f(turret->radious, turret->radious)))
                 turret->setRotation(angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI));
         }
