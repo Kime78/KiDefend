@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h>
 
 #include "core.hpp"
 #include "utility.hpp"
@@ -103,7 +104,7 @@ void Game::run() {
     window->draw(rect);
     for(auto turret : turrets) {
         Enemy* enemy_short;
-        float min_dist = 1e307;
+        float min_dist = INFINITY;
         for(auto enemy : enemies) {
             if(rectular_collide(turret->getPosition(), enemy->getPosition(), sf::Vector2f(turret->radious, turret->radious))) {
                 auto dist = distance(turret->getPosition(), enemy->getPosition());
@@ -114,8 +115,13 @@ void Game::run() {
             }
         }
         if(enemy_short != nullptr) {
-            if(rectular_collide(turret->getPosition(), enemy_short->getPosition(), sf::Vector2f(turret->radious, turret->radious)))
+            if(rectular_collide(turret->getPosition(), enemy_short->getPosition(), sf::Vector2f(turret->radious, turret->radious))) {
                 turret->setRotation(angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI));
+                if(turret->atack_timer.getElapsedTime() > turret->attack_cooldown) {
+                    bullets.push_back(spawn_bullet(turret->getPosition(), angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI), 1));
+                    turret->atack_timer.restart();
+                }
+            }
         }
         window->draw(*turret);
     }
@@ -125,6 +131,24 @@ void Game::run() {
         if(rectular_collide((*enemy).getPosition(), current_level.path.path.back(), sf::Vector2f(30, 30))) {
             kill_enemy(enemy);
             break;
+        }
+    }
+
+    for(auto bullet: bullets) {
+        window->draw(*bullet);
+
+        //to be put in  a func
+        float vx = bullet->speed * cos(bullet->angle);
+        float vy = bullet->speed * sin(bullet->angle);
+        bullet->setPosition(bullet->getPosition().x + vx, bullet->getPosition().y + vy);
+        for(auto enemy : enemies) {
+            if(rectular_collide(enemy->getPosition(), bullet->getPosition(), sf::Vector2f(5, 5))) {
+                enemy->health--;
+                if(enemy->health == 0) {
+                    kill_enemy(enemy);
+                }
+                delete_bullet(bullet);
+            }
         }
     }
     //Font: MV Boli
@@ -174,7 +198,7 @@ void Game::kill_enemy(Enemy* enemy) {
 }
 
 Turret* Game::spawn_turret(TurretType type, sf::Vector2f pos) {
-    Turret* turret = new Turret;
+    Turret* turret = new Turret(type);
     turret->setPosition(pos);
     turret->setOrigin(16, 16);
     turret->setRotation(0);
@@ -191,4 +215,29 @@ Turret* Game::spawn_turret(TurretType type, sf::Vector2f pos) {
     }
     return turret;
 
+}
+
+Bullet* Game::spawn_bullet(sf::Vector2f pos, float angle, float speed) {
+    Bullet* bullet = new Bullet;
+    bullet->setPosition(pos);
+    bullet->angle = angle;
+    bullet->speed = speed;
+    bullet->setFillColor(sf::Color::Black);
+    bullet->setRadius(5);
+
+    return bullet;
+}
+
+void Game::delete_bullet(Bullet* bullet) {
+    auto it = bullets.begin();
+    while (it != bullets.end()) {
+        if (*it == bullet) {
+            it = bullets.erase(it);
+        }
+        else {
+            ++it;
+        }
+    }
+    delete bullet;
+    bullet = nullptr;
 }

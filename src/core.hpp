@@ -15,7 +15,7 @@ struct Game {
     sf::Sprite map_sprite;
     sf::Texture shop_tex;
     sf::Sprite shop_sprite;
-    std::vector<sf::CircleShape*> bullets;
+    std::vector<Bullet*> bullets;
     std::vector<Enemy*> enemies;
     std::vector<Turret*> turrets;
     sf::RenderWindow* window;
@@ -31,12 +31,14 @@ struct Game {
     bool dragging;
     void run();
     void spawn_wave();
+
+    //to be put in an Interface
     Enemy* spawn_enemy(EnemyType type, sf::Vector2f pos);
     void kill_enemy(Enemy* enemy);
     Turret* spawn_turret(TurretType type, sf::Vector2f pos);
     void kill_turret(Turret* turret);
-    sf::CircleShape* spawn_bullet(sf::Vector2f pos, float angle, float speed);
-    void delete_bullet(sf::CircleShape* bullet);
+    Bullet* spawn_bullet(sf::Vector2f pos, float angle, float speed);
+    void delete_bullet(Bullet* bullet);
 
     Game(int width, int height, std::string name);
     

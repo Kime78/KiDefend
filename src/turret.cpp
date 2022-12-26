@@ -1,19 +1,17 @@
 #include "turret.hpp"
 
-Turret::Turret() {
-    cost = 500;
-    radious = 100;
-}
 
 Turret::Turret(TurretType type) {
     switch(type) {
         case TurretType::Gun:
             cost = 500;
-            radious = 100;
+            radious = 200;
+            attack_cooldown = sf::milliseconds(500);
             break;
         case TurretType::Rocket:
             cost = 1000;
-            radious = 80;
+            radious = 150;
+            attack_cooldown = sf::milliseconds(700);
             break;
     }
 }

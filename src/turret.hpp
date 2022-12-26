@@ -9,9 +9,12 @@ struct Turret : public sf::Sprite {
     float radious;
     Turret();
     Turret(TurretType type);
+    sf::Clock atack_timer;
+    sf::Time attack_cooldown;
 };
 
 struct Bullet : public sf::CircleShape {
-    const float angle;
-    const float speed;
+    float angle;
+    float speed;
+
 };
