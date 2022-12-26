@@ -74,7 +74,7 @@ int main()
         // window.clear();
         // window.draw(map);
         // if(rectular_collide(e, test.getPosition(), test.radious)) { 
-        //         test.setRotation(angle_between(test.getPosition(), e.getPosition()) * (180 / M_PI));
+        //         test.setRotation(angle_between(test.getPosition(), e.getPosition()) * (180 / PI));
         // }
         // path.move_in_path(e);
         // if(e.getPosition().x > 349 && e.getPosition().x < 351 && e.getPosition().y > 429 && e.getPosition().y < 431) {

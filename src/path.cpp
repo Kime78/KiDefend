@@ -20,7 +20,7 @@ void Path::move_in_path(Enemy& obj) {
         obj.path_indx++;
         float angle = angle_between(path[obj.path_indx], obj.getPosition());
         obj.setRotation(0);
-        obj.rotate(angle * (180.0/M_PI));
+        obj.rotate(angle * (180.0/PI));
     }
     obj.setPosition(obj.getPosition().x + vx, obj.getPosition().y + vy);
 }

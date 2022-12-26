@@ -10,3 +10,8 @@ struct Turret : public sf::Sprite {
     Turret();
     Turret(TurretType type);
 };
+
+struct Bullet : public sf::CircleShape {
+    const float angle;
+    const float speed;
+};

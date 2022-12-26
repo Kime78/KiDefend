@@ -8,6 +8,7 @@ void Level::load_level(int level_num) {
     
     int enemy_num, waves_num;
     fin >> waves_num;
+    waves.push(Wave());
     for(int k = 0; k < waves_num; k++) {
         Wave wave;
         fin >> wave.wave_num >> enemy_num;

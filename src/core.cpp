@@ -32,7 +32,7 @@ void Game::run() {
 
     if(wave_timer.getElapsedTime() > time_between_waves_spawn) { 
         //a new wave appears
-        std::cout << "Wave " << current_wave.wave_num << " spawn~\n"; 
+        //return std::cout << "Wave " << current_wave.wave_num << " spawn~\n"; 
         wave_timer.restart();
         current_level.waves.pop();
         current_wave = current_level.waves.front();
@@ -40,18 +40,18 @@ void Game::run() {
 
     if(!current_wave.enemies.empty()) { //while there are enemies to spawn 
             if(enemy_timer.getElapsedTime() > time_between_enemy_spawn) {
-                std::cout << "Enemy spawn~ " << current_wave.enemies.size() << "";
-                switch(current_wave.enemies.front().type) {
-                    case EnemyType::Zombie: 
-                        std::cout<< "Z\n";
-                        break;
-                    case EnemyType::Alien: 
-                        std::cout<< "A\n";
-                        break;
-                    case EnemyType::Monster: 
-                        std::cout<< "M\n";
-                        break;
-                }
+                // //std::cout << "Enemy spawn~ " << current_wave.enemies.size() << "";
+                // switch(current_wave.enemies.front().type) {
+                //     case EnemyType::Zombie: 
+                //         std::cout<< "Z\n";
+                //         break;
+                //     case EnemyType::Alien: 
+                //         std::cout<< "A\n";
+                //         break;
+                //     case EnemyType::Monster: 
+                //         std::cout<< "M\n";
+                //         break;
+                //}
                 enemies.push_back(spawn_enemy(current_wave.enemies.front().type, current_level.path.path.front()));
                 enemy_timer.restart();
                 current_wave.enemies.pop();
@@ -86,7 +86,7 @@ void Game::run() {
     if(dragging) {
         auto poz = sf::Mouse::getPosition(*window);
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            if(turrets.back() != nullptr) {
+            if(!turrets.empty()) {
                 turrets.back()->setPosition((sf::Vector2f)poz);
             }
         }
@@ -102,6 +102,21 @@ void Game::run() {
     window->draw(shop_sprite);
     window->draw(rect);
     for(auto turret : turrets) {
+        Enemy* enemy_short;
+        float min_dist = 9999999;
+        for(auto enemy : enemies) {
+            if(rectular_collide(turret->getPosition(), enemy->getPosition(), sf::Vector2f(turret->radious, turret->radious))) {
+                auto dist = distance(turret->getPosition(), enemy->getPosition());
+                if(dist < min_dist) {
+                    min_dist = dist;
+                    enemy_short = enemy;
+                }
+            }
+        }
+        if(!enemies.empty()) {
+            if(rectular_collide(turret->getPosition(), enemy_short->getPosition(), sf::Vector2f(turret->radious, turret->radious)))
+                turret->setRotation(angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI));
+        }
         window->draw(*turret);
     }
     for(auto enemy : enemies) {
@@ -144,7 +159,7 @@ Enemy* Game::spawn_enemy(EnemyType type, sf::Vector2f pos) {
 }
 
 void Game::kill_enemy(Enemy* enemy) {
-   // enemies.pop_back();
+    //enemies.pop_back();
     auto it = enemies.begin();
     while (it != enemies.end()) {
         if (*it == enemy) {

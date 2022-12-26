@@ -3,6 +3,9 @@
 #include <queue>
 #include "enemy.hpp"
 
+
+#define PI 3.14159265358979323846
+
 struct Path {
     std::vector<sf::Vector2f> path;
 
