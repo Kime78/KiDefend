@@ -102,8 +102,8 @@ void Game::run() {
     window->draw(map_sprite);
     window->draw(shop_sprite);
     window->draw(rect);
+    Enemy* enemy_short = nullptr;
     for(auto turret : turrets) {
-        Enemy* enemy_short;
         float min_dist = INFINITY;
         for(auto enemy : enemies) {
             if(rectular_collide(turret->getPosition(), enemy->getPosition(), sf::Vector2f(turret->radious, turret->radious))) {
@@ -118,7 +118,8 @@ void Game::run() {
             if(rectular_collide(turret->getPosition(), enemy_short->getPosition(), sf::Vector2f(turret->radious, turret->radious))) {
                 turret->setRotation(angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI));
                 if(turret->atack_timer.getElapsedTime() > turret->attack_cooldown) {
-                    bullets.push_back(spawn_bullet(turret->getPosition(), angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI), 1));
+                    std::cout << angle_between(turret->getPosition(), enemy_short->getPosition()) << " " << angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI) << '\n';
+                    bullets.push_back(spawn_bullet(turret->getPosition(), angle_between(turret->getPosition(), enemy_short->getPosition()), 1));
                     turret->atack_timer.restart();
                 }
             }
@@ -140,9 +141,10 @@ void Game::run() {
         //to be put in  a func
         float vx = bullet->speed * cos(bullet->angle);
         float vy = bullet->speed * sin(bullet->angle);
-        bullet->setPosition(bullet->getPosition().x + vx, bullet->getPosition().y + vy);
+        bullet->setPosition(bullet->getPosition().x - vx, bullet->getPosition().y - vy);
+
         for(auto enemy : enemies) {
-            if(rectular_collide(enemy->getPosition(), bullet->getPosition(), sf::Vector2f(5, 5))) {
+            if(rectular_collide(enemy->getPosition(), bullet->getPosition(), sf::Vector2f(16, 16))) {
                 enemy->health--;
                 if(enemy->health == 0) {
                     kill_enemy(enemy);
