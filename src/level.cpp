@@ -13,23 +13,36 @@ void Level::load_level(int level_num) {
         Wave wave;
         fin >> wave.wave_num >> enemy_num;
         for(int i = 0; i < enemy_num; i++) {
-            Enemy e;
-            int type;
-            fin >> type;
-            switch (type)
+            int type_num = 0;
+            fin >> type_num;
+            EnemyType type;
+            switch (type_num)
             {
             case 1:
-                e.type = EnemyType::Zombie;
+                type = EnemyType::Red;
                 break;
             case 2:
-                e.type = EnemyType::Alien;
+                type = EnemyType::Blue;
                 break;
             case 3:
-                e.type = EnemyType::Monster;
+                type = EnemyType::Green;
+                break;
+            case 4:
+                type = EnemyType::Yellow;
+                break;
+            case 5:
+                type = EnemyType::Pink;
+                break;
+            case 6:
+                type = EnemyType::Black;
+                break;
+            case 7:
+                type = EnemyType::Lead;
                 break;
             default:
                 break;
             }
+            Enemy e(type);
             wave.enemies.push(e);
         }
         waves.push(wave);

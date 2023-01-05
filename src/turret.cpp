@@ -6,7 +6,7 @@ Turret::Turret(TurretType type) {
         case TurretType::Gun:
             cost = 500;
             radious = 200;
-            attack_cooldown = sf::milliseconds(300);
+            attack_cooldown = sf::milliseconds(600);
             break;
         case TurretType::Rocket:
             cost = 1000;

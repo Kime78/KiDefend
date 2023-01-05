@@ -10,11 +10,14 @@
 
 struct Game {
     std::array<sf::Texture, 5> turret_tex;
-    std::array<sf::Texture, 5> enemies_tex;
+    std::array<sf::Texture, 10> enemies_tex;
     std::array<sf::Texture, 5> maps_tex;
     sf::Sprite map_sprite;
     sf::Texture shop_tex;
     sf::Sprite shop_sprite;
+    sf::Text hp_text;
+    sf::Text money_text;
+    sf::Font font;
     std::vector<Bullet*> bullets;
     std::vector<Enemy*> enemies;
     std::vector<Turret*> turrets;
@@ -34,6 +37,7 @@ struct Game {
 
     //to be put in an Interface
     Enemy* spawn_enemy(EnemyType type, sf::Vector2f pos);
+    Enemy* spawn_enemy(const Enemy& enemy);
     void kill_enemy(Enemy* enemy);
     Turret* spawn_turret(TurretType type, sf::Vector2f pos);
     void kill_turret(Turret* turret);

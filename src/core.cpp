@@ -3,15 +3,19 @@
 
 #include "core.hpp"
 #include "utility.hpp"
+#include "game_object.hpp"
+#include "button.hpp"
 
 Game::Game(int width, int height, std::string name) {
     window = new sf::RenderWindow( {1280, 720} , "KiDefend");
+    IButton::window = window;
     health = 50;
-    money = 0;
+    money = 1000;
     wave_timer.restart();
     enemy_timer.restart();
+    window->setFramerateLimit(60); 
     levels[current_level_number - 1].load_level(1);
-    for(int i = 0; i < 3; i++) {
+    for(int i = 0; i < 7; i++) {
         std::string path = "./Resources/enemy" + std::to_string(i) + ".png";
         enemies_tex[i].loadFromFile(path);
     }
@@ -24,16 +28,27 @@ Game::Game(int width, int height, std::string name) {
     shop_tex.loadFromFile("./Resources/shop.png");
     shop_sprite.setTexture(shop_tex);
     shop_sprite.setPosition(1020, 0);
+
+    font.loadFromFile("./Resources/mvboli.ttf");
+
+    hp_text.setFont(font);
+    hp_text.setFillColor(sf::Color::Black);
+    hp_text.setCharacterSize(24);
+
+    money_text.setFont(font);
+    money_text.setFillColor(sf::Color::Black);
+    money_text.setCharacterSize(24);
+    money_text.setPosition(sf::Vector2f(900, 0));
 }
 
 void Game::run() {
-    
+    ShopButton test(shop_tex, sf::Vector2f(0, 0), sf::Vector2i(50, 50));
+
     sf::Time time_between_enemy_spawn = sf::seconds(1);
     sf::Time time_between_waves_spawn = sf::seconds(20);
 
     if(wave_timer.getElapsedTime() > time_between_waves_spawn) { 
         //a new wave appears
-        //return std::cout << "Wave " << current_wave.wave_num << " spawn~\n"; 
         wave_timer.restart();
         current_level.waves.pop();
         current_wave = current_level.waves.front();
@@ -41,19 +56,7 @@ void Game::run() {
 
     if(!current_wave.enemies.empty()) { //while there are enemies to spawn 
             if(enemy_timer.getElapsedTime() > time_between_enemy_spawn) {
-                // //std::cout << "Enemy spawn~ " << current_wave.enemies.size() << "";
-                // switch(current_wave.enemies.front().type) {
-                //     case EnemyType::Zombie: 
-                //         std::cout<< "Z\n";
-                //         break;
-                //     case EnemyType::Alien: 
-                //         std::cout<< "A\n";
-                //         break;
-                //     case EnemyType::Monster: 
-                //         std::cout<< "M\n";
-                //         break;
-                //}
-                enemies.push_back(spawn_enemy(current_wave.enemies.front().type, current_level.path.path.front()));
+                enemies.push_back(spawn_enemy(current_wave.enemies.front().get_type(), current_level.path.path.front()));
                 enemy_timer.restart();
                 current_wave.enemies.pop();
             }   
@@ -65,9 +68,11 @@ void Game::run() {
             if (event.mouseButton.button == sf::Mouse::Left) {
                 auto poz = sf::Mouse::getPosition(*window);
                 if(rectular_collide((sf::Vector2f)poz, sf::Vector2f(1045, 90), sf::Vector2f(217, 77))) {
-                //std::cout << "\n SPAWN at " << poz.x << " " << poz.y << "\n\n";
-                    turrets.push_back(spawn_turret(TurretType::Gun, (sf::Vector2f)poz));
-                    dragging = 1;
+                    if(money >= 500) { //turret cost maw 
+                        turrets.push_back(spawn_turret(TurretType::Gun, (sf::Vector2f)poz));
+                        money -= turrets.back()->cost;
+                        dragging = 1;
+                    }
                 }
                 
             }  
@@ -92,7 +97,10 @@ void Game::run() {
             }
         }
     }
-    
+
+    hp_text.setString(std::to_string(health) + " <3");
+    money_text.setString(std::to_string(money) + " $");
+
     sf::RectangleShape rect;
     rect.setSize(sf::Vector2f(217, 77));
     rect.setFillColor(sf::Color::Red);
@@ -106,7 +114,7 @@ void Game::run() {
     for(auto turret : turrets) {
         float min_dist = INFINITY;
         for(auto enemy : enemies) {
-            if(rectular_collide(turret->getPosition(), enemy->getPosition(), sf::Vector2f(turret->radious, turret->radious))) {
+            if(circular_collide(turret->getPosition(), enemy->getPosition(), turret->radious)) {
                 auto dist = distance(turret->getPosition(), enemy->getPosition());
                 if(dist < min_dist) {
                     min_dist = dist;
@@ -115,23 +123,23 @@ void Game::run() {
             }
         }
         if(enemy_short != nullptr) {
-            if(rectular_collide(turret->getPosition(), enemy_short->getPosition(), sf::Vector2f(turret->radious, turret->radious))) {
+            if(circular_collide(turret->getPosition(), enemy_short->getPosition(), turret->radious)) {
                 turret->setRotation(angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI));
                 if(turret->atack_timer.getElapsedTime() > turret->attack_cooldown) {
-                    std::cout << angle_between(turret->getPosition(), enemy_short->getPosition()) << " " << angle_between(turret->getPosition(), enemy_short->getPosition()) * (180 / PI) << '\n';
-                    bullets.push_back(spawn_bullet(turret->getPosition(), angle_between(turret->getPosition(), enemy_short->getPosition()), 1));
+                    bullets.push_back(spawn_bullet(turret->getPosition(), angle_between(turret->getPosition(), enemy_short->getPosition()), 50));
                     turret->atack_timer.restart();
                 }
             }
         }
         window->draw(*turret);
     }
+
     for(auto enemy : enemies) {
         current_level.path.move_in_path(*enemy);
         window->draw(*enemy);
         if(rectular_collide((*enemy).getPosition(), current_level.path.path.back(), sf::Vector2f(30, 30))) {
             kill_enemy(enemy);
-            break;
+            health -= enemy->get_health();
         }
     }
 
@@ -144,16 +152,28 @@ void Game::run() {
         bullet->setPosition(bullet->getPosition().x - vx, bullet->getPosition().y - vy);
 
         for(auto enemy : enemies) {
-            if(rectular_collide(enemy->getPosition(), bullet->getPosition(), sf::Vector2f(16, 16))) {
-                enemy->health--;
-                if(enemy->health == 0) {
+            if(enemy != nullptr) {
+                sf::Vector2f test = enemy->getPosition() - enemy->getOrigin();
+                //std::cout << enemy->getOrigin().x << " " << enemy->getOrigin().y << "\t" << enemy->getPosition().x << " " << enemy->getPosition().y << '\t';
+                //std::cout << test.x << " " << test.y << '\n';
+                if(circular_collide(enemy->getPosition(), bullet->getPosition(), 32)) {
+                    enemy->take_damage();
+                    if(enemy->get_health() != 0) {
+                        //to tidy this up
+                        Enemy e(enemy->get_type());
+                        e.setPosition(enemy->getPosition());
+                        e.set_path_indx(enemy->get_path_indx());
+                        enemies.push_back(spawn_enemy(e));
+                    }
                     kill_enemy(enemy);
+                    delete_bullet(bullet);
                 }
-                delete_bullet(bullet);
             }
         }
     }
-    //Font: MV Boli
+    window->draw(hp_text);
+    window->draw(money_text);
+
     window->display();
 }
 
@@ -164,19 +184,61 @@ void Game::spawn_wave() {
 Enemy* Game::spawn_enemy(EnemyType type, sf::Vector2f pos) {
     Enemy* enemy = new Enemy(type);
     enemy->setPosition(pos);
-    enemy->setOrigin(16, 16);
-    enemy->setRotation(0);
     switch (type)
     {
-    case EnemyType::Zombie:
+    case EnemyType::Red:
         enemy->setTexture(enemies_tex[0]);
         break;
-    case EnemyType::Alien:
+    case EnemyType::Blue:
         enemy->setTexture(enemies_tex[1]);
         break;
-    case EnemyType::Monster:
+    case EnemyType::Green:
         enemy->setTexture(enemies_tex[2]);
-        break;    
+        break;
+    case EnemyType::Yellow:
+        enemy->setTexture(enemies_tex[3]);
+        break;
+    case EnemyType::Pink:
+        enemy->setTexture(enemies_tex[4]);
+        break;
+    case EnemyType::Black:
+        enemy->setTexture(enemies_tex[5]);
+        break;   
+    case EnemyType::Lead:
+        enemy->setTexture(enemies_tex[6]);
+        break;     
+    default:
+        break;
+    }
+
+    return enemy;
+}
+
+Enemy* Game::spawn_enemy(const Enemy& other) {
+    Enemy* enemy = new Enemy(other);
+    switch (enemy->get_type())
+    {
+    case EnemyType::Red:
+        enemy->setTexture(enemies_tex[0]);
+        break;
+    case EnemyType::Blue:
+        enemy->setTexture(enemies_tex[1]);
+        break;
+    case EnemyType::Green:
+        enemy->setTexture(enemies_tex[2]);
+        break;
+    case EnemyType::Yellow:
+        enemy->setTexture(enemies_tex[3]);
+        break;
+    case EnemyType::Pink:
+        enemy->setTexture(enemies_tex[4]);
+        break;
+    case EnemyType::Black:
+        enemy->setTexture(enemies_tex[5]);
+        break;   
+    case EnemyType::Lead:
+        enemy->setTexture(enemies_tex[6]);
+        break;   
     default:
         break;
     }
@@ -195,7 +257,7 @@ void Game::kill_enemy(Enemy* enemy) {
             ++it;
         }
     }
-    delete enemy;
+    delete enemy; 
     enemy = nullptr;
 }
 
@@ -242,4 +304,5 @@ void Game::delete_bullet(Bullet* bullet) {
     }
     delete bullet;
     bullet = nullptr;
+ 
 }
