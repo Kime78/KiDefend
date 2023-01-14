@@ -6,12 +6,13 @@ void Level::load_level(int level_num) {
     std::string level_path = "./Resources/LevelData" + std::to_string(level_num) + ".txt";
     std::ifstream fin(level_path);
     
-    int enemy_num, waves_num;
-    fin >> waves_num;
+    int enemy_num;
+    fin >> wave_num;
     waves.push(Wave());
-    for(int k = 0; k < waves_num; k++) {
+    for(int k = 0; k < wave_num; k++) {
         Wave wave;
         fin >> wave.wave_num >> enemy_num;
+        nr_of_enemies += enemy_num;
         for(int i = 0; i < enemy_num; i++) {
             int type_num = 0;
             fin >> type_num;
@@ -42,15 +43,15 @@ void Level::load_level(int level_num) {
             default:
                 break;
             }
-            Enemy e(type);
+            Enemy e(type, sf::Vector2f(0, 0));
             wave.enemies.push(e);
         }
         waves.push(wave);
     }
 
     int point_x, point_y;
-
+    path = new Path;
     while(fin >> point_x >> point_y) {
-        path.path.push_back(sf::Vector2f(point_x, point_y));
+        path->path.push_back(sf::Vector2f(point_x, point_y));
     }
 }

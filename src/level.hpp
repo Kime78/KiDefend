@@ -1,12 +1,17 @@
 #pragma once
+
 #include "path.hpp"
-#include "enemy.hpp"
-struct Level
-{
-    Path path;
+#include "wave.hpp"
+
+struct Path;
+
+struct Level {
+    Path* path;
     int level_num;
-    sf::Sprite level_sprite; //or maybe a matrix of sprites to make it tile BASED
+    int wave_num;
+    int nr_of_enemies;
     std::queue<Wave> waves;
+
 
     void load_level(int level_num);
 };

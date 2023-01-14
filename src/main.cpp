@@ -21,10 +21,10 @@ int main()
 //    // Game joc(100, 100, "test");
 //     Turret test;
 //     test.setScale(2, 2);
-//     test.radious = 200;
+//     test.radius = 200;
 //     rad.setPosition(200,200);
-//     rad.setRadius(test.radious);
-//     rad.setOrigin(test.radious, test.radious);
+//     rad.setRadius(test.radius);
+//     rad.setOrigin(test.radius, test.radius);
 //     float target_x, target_y;
 //     box_text.loadFromFile("./Resources/box2.png");
 //     map_text.loadFromFile("./Resources/map.png");
@@ -73,7 +73,7 @@ int main()
         // }
         // window.clear();
         // window.draw(map);
-        // if(rectular_collide(e, test.getPosition(), test.radious)) { 
+        // if(rectular_collide(e, test.getPosition(), test.radius)) { 
         //         test.setRotation(angle_between(test.getPosition(), e.getPosition()) * (180 / PI));
         // }
         // path.move_in_path(e);
