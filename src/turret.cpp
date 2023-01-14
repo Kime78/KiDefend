@@ -8,6 +8,7 @@
 
 std::array<sf::Texture, 10>* Turret::textures = nullptr;
 
+
 Turret::Turret(TurretType type, sf::Vector2f pos) {
     setPosition(pos);
     setOrigin(16, 16);
@@ -16,15 +17,15 @@ Turret::Turret(TurretType type, sf::Vector2f pos) {
     this->type = type;
     switch(type) {
         case TurretType::Gun:
-            cost = 500;
+            cost = 300;
             radius = 200;
-            attack_cooldown = sf::milliseconds(600);
+            attack_cooldown = sf::milliseconds(700);
             setTexture((*textures)[0]);
             break;
         case TurretType::MultiBarrelGun:
-            cost = 300;
+            cost = 450;
             radius = 150;
-            attack_cooldown= sf::milliseconds(500);
+            attack_cooldown= sf::milliseconds(850);
             setTexture((*textures)[1]);
             break;
         case TurretType::Rocket:

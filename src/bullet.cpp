@@ -6,6 +6,7 @@
 #include "turret.hpp"
 
 std::array<sf::Texture, 10>* Bullet::textures = nullptr;
+int* Bullet::game_money = nullptr;
 
 void Bullet::draw() {
     window->draw(*this);
@@ -21,7 +22,9 @@ void Bullet::update() {
     objects->iterate([this](GameObject& obj){
         if (auto enemy = dynamic_cast<Enemy*>(&obj)) {
             if (enemy->getGlobalBounds().contains(getPosition())) {
+                objects->remove(this);
                 enemy->take_damage();
+                (*game_money)++;
                 if(enemy->get_health() != 0) {
                     Enemy e(enemy->get_type(), enemy->getPosition());
                     e.setPosition(enemy->getPosition());
@@ -29,7 +32,6 @@ void Bullet::update() {
                     objects->add(std::make_unique<Enemy>(e));
                 }
                 objects->remove(enemy);
-                objects->remove(this);
             }
         }
     });  

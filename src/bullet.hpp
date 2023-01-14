@@ -6,6 +6,7 @@ struct Turret;
 
 struct Bullet : public GameObject {
     static std::array<sf::Texture, 10>* textures;
+    static int* game_money;
     float angle;
     float speed;
     Turret* origin_turret;

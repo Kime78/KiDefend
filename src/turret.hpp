@@ -6,10 +6,10 @@ enum class TurretType {
 };
 struct Turret : public GameObject {
     static std::array<sf::Texture, 10>* textures;
+    
     TurretType type;
     int cost;
     float radius;
-    Turret();
     Turret(TurretType type, sf::Vector2f pos);
     sf::Clock atack_timer;
     sf::Time attack_cooldown;

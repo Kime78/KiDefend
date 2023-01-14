@@ -90,7 +90,7 @@ Enemy::Enemy(const Enemy& other) {
     this->type = other.type;
     this->health = other.health;
     this->speed = other.speed;
-    this->setTexture(*other.getTexture());
+    this->setTexture(*(other.getTexture()));
     this->setPosition(other.getPosition());
     this->setOrigin(16, 16);
     this->setRotation(0);

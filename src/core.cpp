@@ -57,6 +57,7 @@ Game::Game(int width, int height, std::string name) {
     IButton::text_font = &font;
     ShopButton::dragging = &dragging;
     ShopButton::game_money = &money;
+    Bullet::game_money = &money;
 
     hp_text.setFont(font);
     hp_text.setFillColor(sf::Color::Black);
@@ -82,34 +83,37 @@ Game::Game(int width, int height, std::string name) {
     lose_text.setCharacterSize(200);
     lose_text.setPosition(sf::Vector2f(70, 160));
     GameObject::objects = &objects;
+    
     dragging = 0;
     //ShopButton butt1(buttons_tex[0], sf::Vector2f(1045, 90), sf::Vector2i(217, 77), TurretType::Gun, 350.0);
-    objects.add(std::make_unique<ShopButton>(buttons_tex[0], sf::Vector2f(1045, 90), sf::Vector2i(217, 77), TurretType::Gun, 350.0));
-    objects.add(std::make_unique<ShopButton>(buttons_tex[1], sf::Vector2f(1045, 290), sf::Vector2i(217, 77), TurretType::MultiBarrelGun, 350.0));
+    objects.add(std::make_unique<ShopButton>(buttons_tex[0], sf::Vector2f(1045, 90), sf::Vector2i(217, 77), TurretType::Gun, 300));
+    objects.add(std::make_unique<ShopButton>(buttons_tex[1], sf::Vector2f(1045, 182), sf::Vector2i(217, 77), TurretType::MultiBarrelGun, 450));
 }
 
 void Game::run() {
     //ShopButton test(shop_tex, sf::Vector2f(0, 0), sf::Vector2i(50, 50));
 
-    sf::Time time_between_enemy_spawn = sf::seconds(0.1);
-    sf::Time time_between_waves_spawn = sf::seconds(0.5);
+    sf::Time time_between_enemy_spawn = sf::seconds(0.75);
+    sf::Time time_between_waves_spawn = sf::seconds(15);
 
-    if(current_level.waves.empty() == false) {
-        if(wave_timer.getElapsedTime() > time_between_waves_spawn) { 
-            //a new wave appears
-            wave_timer.restart();
-            
-            current_level.waves.pop();
-            if(current_level.waves.empty() == false) { //idk why this secondary seamingly redundat check is needed 
-                current_wave_num++;
-                current_wave = current_level.waves.front();
+
+    if(current_wave.enemies.empty()) { 
+        if(current_level.waves.empty() == false) {
+            if(wave_timer.getElapsedTime() > time_between_waves_spawn) { 
+                //a new wave appears
+                wave_timer.restart();
+                
+                current_level.waves.pop();
+                if(current_level.waves.empty() == false) { //idk why this secondary seamingly redundat check is needed 
+                    current_wave_num++;
+                    current_wave = current_level.waves.front();
+                }
             }
         }
     }
-    
+
     if(!current_wave.enemies.empty()) { //while there are enemies to spawn 
         if(enemy_timer.getElapsedTime() > time_between_enemy_spawn) {
-            //enemies.push_back(spawn_enemy(current_wave.enemies.front().get_type(), current_level.path.path.front()));
             objects.add(std::make_unique<Enemy>(current_wave.enemies.front().get_type(), current_level.path->path.front()));
             enemy_timer.restart();
             current_wave.enemies.pop();
@@ -136,12 +140,15 @@ void Game::run() {
             ShopButton::ptr_to_turr->setPosition((sf::Vector2f)poz);
         }
     }
-    if(health >= 0)
+
+    if(health >= 0) {
         hp_text.setString(std::to_string(health) + " <3");
-    money_text.setString(std::to_string(money) + " $");
+    }
+    money_text.setString("$ " + std::to_string(money));
     wave_text.setString("Waves: " + std::to_string(current_wave_num) + " / " + std::to_string(current_level.wave_num));
     win_text.setString("You Win!");
     lose_text.setString("You Lost");
+
     sf::Sprite rect;
     rect.setPosition(1045, 90);
     rect.setTexture(buttons_tex[0]);

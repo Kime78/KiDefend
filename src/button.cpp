@@ -7,12 +7,17 @@ bool* ShopButton::dragging = nullptr;
 int* ShopButton::game_money = nullptr;
 GameObject* ShopButton::ptr_to_turr = nullptr;
 
-ShopButton::ShopButton(sf::Texture texture, sf::Vector2f position, sf::Vector2i scale, TurretType shop_for, float price) {
+ShopButton::ShopButton(sf::Texture& texture, sf::Vector2f position, sf::Vector2i scale, TurretType shop_for, int price) {
     this->scale = scale;
     this->setPosition(position);
     this->setTexture(texture);
     this->price = price;
     this->shop_for = shop_for;
+    text.setFont(*text_font);
+    text.setFillColor(sf::Color::Black);
+    text.setCharacterSize(25);
+    text.setPosition(position + sf::Vector2f(120, 20));
+    text.setString("$ " + std::to_string(price));
 }
 
 bool IButton::is_clicked() {
@@ -43,4 +48,6 @@ void ShopButton::update() {
 
 void ShopButton::draw() {
     window->draw(*this);
+    window->draw(text);
+
 }

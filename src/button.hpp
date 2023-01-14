@@ -21,7 +21,8 @@ public:
     static bool* dragging;
     static int* game_money;
     static GameObject* ptr_to_turr;
-    ShopButton(sf::Texture texture, sf::Vector2f position, sf::Vector2i scale, TurretType shop_for, float price);
+    sf::Text text;
+    ShopButton(sf::Texture& texture, sf::Vector2f position, sf::Vector2i scale, TurretType shop_for, int price);
     void on_click();
     void draw() override;
     void update() override;
