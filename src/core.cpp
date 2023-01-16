@@ -93,7 +93,7 @@ Game::Game(int width, int height, std::string name) {
 void Game::run() {
     //ShopButton test(shop_tex, sf::Vector2f(0, 0), sf::Vector2i(50, 50));
 
-    sf::Time time_between_enemy_spawn = sf::seconds(0.75);
+    sf::Time time_between_enemy_spawn = sf::seconds(0.65);
     sf::Time time_between_waves_spawn = sf::seconds(15);
 
 
