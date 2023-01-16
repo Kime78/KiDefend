@@ -19,13 +19,13 @@ Turret::Turret(TurretType type, sf::Vector2f pos) {
         case TurretType::Gun:
             cost = 300;
             radius = 200;
-            attack_cooldown = sf::milliseconds(700);
+            attack_cooldown = sf::milliseconds(900);
             setTexture((*textures)[0]);
             break;
         case TurretType::MultiBarrelGun:
             cost = 450;
-            radius = 150;
-            attack_cooldown= sf::milliseconds(850);
+            radius = 80;
+            attack_cooldown= sf::milliseconds(1150);
             setTexture((*textures)[1]);
             break;
         case TurretType::Rocket:
@@ -45,14 +45,14 @@ void Turret::update() {
     float min_dist = INFINITY;
     if(this->type == TurretType::MultiBarrelGun) {
         if(this->atack_timer.getElapsedTime() > this->attack_cooldown) {
-            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(0, 1)), 20, this, this->getPosition()));
-            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(0, -1)), 20, this, this->getPosition()));
-            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(1, 0)), 20, this, this->getPosition()));
-            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(-1, 0)), 20, this, this->getPosition()));
-            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(1, 1)), 20, this, this->getPosition()));
-            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(-1, -1)), 20, this, this->getPosition()));
-            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(-1, 1)), 20, this, this->getPosition()));
-            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(1, -1)), 20, this, this->getPosition()));
+            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(0, 1)), 12, this, this->getPosition()));
+            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(0, -1)), 12, this, this->getPosition()));
+            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(1, 0)), 12, this, this->getPosition()));
+            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(-1, 0)), 12, this, this->getPosition()));
+            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(1, 1)), 12, this, this->getPosition()));
+            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(-1, -1)), 12, this, this->getPosition()));
+            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(-1, 1)), 12, this, this->getPosition()));
+            objects->add(std::make_unique<Bullet>(angle_between(this->getPosition(), this->getPosition() + sf::Vector2f(1, -1)), 12, this, this->getPosition()));
             this->atack_timer.restart();
         }
     }
