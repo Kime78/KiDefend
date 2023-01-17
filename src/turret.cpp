@@ -24,7 +24,7 @@ Turret::Turret(TurretType type, sf::Vector2f pos) {
             break;
         case TurretType::MultiBarrelGun:
             cost = 450;
-            radius = 80;
+            radius = 120;
             attack_cooldown= sf::milliseconds(1150);
             setTexture((*textures)[1]);
             break;

@@ -93,7 +93,7 @@ Game::Game(int width, int height, std::string name) {
 void Game::run() {
     //ShopButton test(shop_tex, sf::Vector2f(0, 0), sf::Vector2i(50, 50));
 
-    sf::Time time_between_enemy_spawn = sf::seconds(0.65);
+    sf::Time time_between_enemy_spawn = sf::seconds(0.35);
     sf::Time time_between_waves_spawn = sf::seconds(15);
 
 
@@ -114,7 +114,7 @@ void Game::run() {
 
     if(!current_wave.enemies.empty()) { //while there are enemies to spawn 
         if(enemy_timer.getElapsedTime() > time_between_enemy_spawn) {
-            objects.add(std::make_unique<Enemy>(current_wave.enemies.front().get_type(), current_level.path->path.front()));
+            objects.add(std::make_unique<Enemy>(current_wave.enemies.front().get_health(), current_level.path->path.front()));
             enemy_timer.restart();
             current_wave.enemies.pop();
         }   
