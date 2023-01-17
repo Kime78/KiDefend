@@ -114,7 +114,7 @@ void Game::run() {
 
     if(!current_wave.enemies.empty()) { //while there are enemies to spawn 
         if(enemy_timer.getElapsedTime() > time_between_enemy_spawn) {
-            objects.add(std::make_unique<Enemy>(current_wave.enemies.front().get_health(), current_level.path->path.front()));
+            objects.add(std::make_unique<Enemy>(current_wave.enemies.front().get_type(), current_level.path->path.front()));
             enemy_timer.restart();
             current_wave.enemies.pop();
         }   
