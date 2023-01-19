@@ -8,7 +8,7 @@
 
 int main()
 {
-    Game joc(1280, 720, "KiDefend");
+    Game joc(1280, 720, "DaBloons Defence");
 
     while (joc.window->isOpen())
     {

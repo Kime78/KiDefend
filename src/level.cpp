@@ -55,3 +55,7 @@ void Level::load_level(int level_num) {
         path->path.push_back(sf::Vector2f(point_x, point_y));
     }
 }
+
+Level::~Level() {
+    delete path;
+}

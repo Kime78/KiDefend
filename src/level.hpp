@@ -12,6 +12,6 @@ struct Level {
     int nr_of_enemies;
     std::queue<Wave> waves;
 
-
+    ~Level();
     void load_level(int level_num);
 };
